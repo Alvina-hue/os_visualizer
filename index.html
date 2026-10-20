@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OS Visualizer | Round Robin Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="topbar"><div class="appmark">▦</div><span>OS LAB <small>CPU SCHEDULING VISUALIZER</small></span><div class="top-status"><i></i> Interactive demo</div></div>
+
+  <main>
+    <!-- SCREEN 1: INPUT -->
+    <section id="setup-screen" class="setup-screen">
+      <div class="setup-card glass">
+        <div class="brand-icon">OS</div>
+        <p class="kicker">OPERATING SYSTEMS PRACTICAL</p>
+        <h1>OS <span>Visualizer</span></h1>
+        <p class="intro">Explore how the CPU schedules sustainability services.</p>
+
+        <label for="activity">Assignment activity</label>
+        <select id="activity">
+          <option value="municipal">Activity 1 — Municipal sustainability</option>
+          <option value="climate">Activity 2 — Climate emergency</option>
+          <option value="custom">Custom processes</option>
+        </select>
+
+        <label for="algorithm">Scheduling algorithm</label>
+        <select id="algorithm">
+          <option value="rr">Round Robin (assignment)</option>
+          <option value="fcfs">First Come, First Served (FCFS)</option>
+        </select>
+
+        <div class="two-fields">
+          <div><label for="process-count">Process count</label><input id="process-count" type="number" min="1" max="8" value="4"></div>
+          <div><label for="quantum">Time quantum (ms)</label><input id="quantum" type="number" min="1" max="20" value="2"></div>
+        </div>
+        <div class="two-fields">
+          <div><label for="overhead">Switch overhead (ms)</label><input id="overhead" type="number" min="0" max="10" value="0"></div>
+          <div><label for="theme">Accent colour</label><select id="theme"><option value="violet">Violet / cyan</option><option value="mint">Mint / blue</option><option value="amber">Amber / coral</option></select></div>
+        </div>
+        <div class="notice" id="activity-note">Activity 1 uses the assignment process values and no switching overhead.</div>
+        <button class="primary wide" id="enter-input">Enter Input <span>→</span></button>
+        <button class="secondary wide" id="random-input">✦ Visualise Random</button>
+        <p class="tiny-note">No installation needed · Runs in your browser</p>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: INPUT DATA AND RESULTS -->
+    <section id="visual-screen" class="hidden">
+      <div class="page-heading">
+        <div><p class="kicker">SCHEDULING WORKSPACE / LIVE SIMULATION</p><h1>Round Robin <span>Dashboard</span></h1><p class="muted">Edit process inputs, run the scheduler, and inspect the performance.</p></div>
+        <button id="back" class="outline">← Setup</button>
+      </div>
+
+      <div class="config-strip glass">
+        <div><small>ALGORITHM</small><strong id="active-algorithm">Round Robin</strong></div>
+        <div><small>TIME QUANTUM</small><strong id="active-quantum">2 ms</strong></div>
+        <div><small>SWITCH OVERHEAD</small><strong id="active-overhead">0 ms</strong></div>
+        <div><small>WORKLOAD</small><strong id="active-workload">Municipal services</strong></div>
+      </div>
+
+      <div class="input-panel glass">
+        <div class="panel-title"><div><p class="kicker">STEP 1</p><h2>Process input</h2></div><div class="panel-actions"><button class="outline small" id="add-process">+ Add process</button><button class="primary small" id="run-simulation">▶ Run simulation</button></div></div>
+        <p class="muted">Arrival and burst times are in milliseconds. Change values if your teacher asks for a different test case.</p>
+        <div class="table-scroll"><table><thead><tr><th>Process</th><th>Sustainability service</th><th>Arrival time</th><th>Burst time</th><th></th></tr></thead><tbody id="input-rows"></tbody></table></div>
+      </div>
+
+      <div class="metrics-grid">
+        <article class="metric glass"><span class="metric-icon">◷</span><small>Average turnaround</small><strong id="avg-tat">— <em>ms</em></strong><p>Arrival to completion</p></article>
+        <article class="metric glass"><span class="metric-icon">⌛</span><small>Average waiting</small><strong id="avg-wt">— <em>ms</em></strong><p>Time spent in ready queue</p></article>
+        <article class="metric glass"><span class="metric-icon">↗</span><small>Average response</small><strong id="avg-rt">— <em>ms</em></strong><p>Time until first CPU access</p></article>
+        <article class="metric glass"><span class="metric-icon">ϟ</span><small>CPU efficiency</small><strong id="efficiency">— <em>%</em></strong><p>Useful work / elapsed time</p></article>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel glass">
+          <div class="panel-title"><div><p class="kicker">STEP 2</p><h2>Gantt chart</h2></div><span class="live-badge"><i></i> Generated schedule</span></div>
+          <p class="muted">Each block shows which process uses the CPU and the interval it occupies.</p>
+          <div class="gantt-scroll"><div id="gantt" class="gantt"><div class="empty-state">Run the simulation to generate your Gantt chart.</div></div></div>
+          <div class="timeline-labels"><span id="start-label">Start: —</span><span id="end-label">Finish: —</span><span id="switch-label">Switches: —</span><span id="overhead-label">Overhead: —</span></div>
+          <div class="legend"><span><i class="legend-process"></i> Process execution</span><span><i class="legend-switch"></i> Context switch</span><span><i class="legend-idle"></i> CPU idle</span></div>
+        </section>
+
+        <section class="panel glass cpu-panel">
+          <p class="kicker">CPU STATUS</p><div class="cpu-chip">CPU</div><h2 id="cpu-current">Ready to run</h2><p id="cpu-service" class="muted">Start the simulation to view CPU status.</p>
+          <div class="status-divider"></div>
+          <div class="status-row"><span>Simulation time</span><strong id="timer">— ms</strong></div>
+          <div class="status-row"><span>Processes completed</span><strong id="completed">— / —</strong></div>
+          <div class="status-row"><span>Total burst time</span><strong id="burst-total">— ms</strong></div>
+        </section>
+      </div>
+
+      <section class="panel glass">
+        <div class="panel-title"><div><p class="kicker">STEP 3</p><h2>Process performance</h2></div><span class="muted">All values in milliseconds</span></div>
+        <div class="table-scroll"><table><thead><tr><th>PID</th><th>Service</th><th>AT</th><th>BT</th><th>CT</th><th>TAT</th><th>WT</th><th>RT</th><th>Progress</th></tr></thead><tbody id="results-rows"><tr><td colspan="9" class="empty-state">Metrics will appear after simulation.</td></tr></tbody></table></div>
+        <div class="formula-row"><span><b>CT</b> Completion time</span><span><b>TAT</b> = CT − AT</span><span><b>WT</b> = TAT − BT</span><span><b>RT</b> = First start − AT</span></div>
+      </section>
+
+      <section class="panel glass">
+        <div class="panel-title"><div><p class="kicker">STEP 4</p><h2>Quantum comparison</h2></div><button class="outline small" id="compare">↔ Compare assignment values</button></div>
+        <p class="muted" id="comparison-note">Activity 1 compares 2 ms vs 3 ms. Activity 2 compares 2 ms vs 4 ms.</p>
+        <div class="table-scroll"><table><thead><tr><th>Quantum</th><th>Avg TAT</th><th>Avg WT</th><th>Avg RT</th><th>Switches</th><th>Overhead</th><th>CPU efficiency</th></tr></thead><tbody id="comparison-rows"><tr><td colspan="7" class="empty-state">Click compare to generate the results table.</td></tr></tbody></table></div>
+        <div id="recommendation" class="recommendation"><b>How to interpret:</b> A smaller quantum gives processes more frequent CPU turns. A larger quantum usually reduces switching but may delay other processes.</div>
+      </section>
+      <footer><span>OS LAB · Round Robin Visualizer</span><span>Built with HTML · CSS · JavaScript</span></footer>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

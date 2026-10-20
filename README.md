@@ -16,4 +16,3 @@ A simple responsive operating-system scheduling visualizer made with HTML, CSS a
 - CPU efficiency = total burst time / elapsed simulation time × 100%.
 
 The page also supports FCFS as an optional extra, custom process inputs, random test data, add/remove process rows, and colour themes. The assignment's main algorithm is Round Robin.
-"# os_visualizer" 
