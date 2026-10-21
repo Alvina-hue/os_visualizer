@@ -3,11 +3,11 @@
 A simple responsive operating-system scheduling visualizer made with HTML, CSS and vanilla JavaScript.
 
 ## Run
-1. Extract the ZIP file.
-2. Open `index.html` in Chrome, Edge, or Firefox.
-3. Choose Activity 1 or Activity 2, then click **Enter Input**.
-4. Edit process arrival/burst values if needed, then click **Run simulation**.
-5. Click **Compare assignment values** to compare the required quanta.
+
+1. Open `index.html` in Chrome, Edge, or Firefox.
+2. Choose Activity 1 or Activity 2, then click **Enter Input**.
+3. Edit process arrival/burst values if needed, then click **Run simulation**.
+4. Click **Compare assignment values** to compare the required quanta.
 
 ## Assignment defaults
 - Activity 1: municipal services, Round Robin, quantum 2 ms, overhead 0 ms; comparison 2 vs 3 ms.
